@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const config = require('../../config')
 module.exports = {
     signup: async (req, res) => {
-        console.log(req);
+        console.log(req.body);
         try {
             const { name, username, email, password } = req.body;
              // Hash the password
@@ -16,10 +16,10 @@ module.exports = {
                 username,
                 email,
                 password: hashedPassword,
-      });
+        });
             res.status(200).json({ data: newUser });
         } catch (err) {
-            res.status(500).json({message: err.message || 'internal server error'})
+            res.status(500).json({message: err.message || 'internal server error'});
         }
     },
     signin: async(req,res)=>{
