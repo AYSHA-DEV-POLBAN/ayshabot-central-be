@@ -27,6 +27,11 @@ Install dependencies
   npm install
 ```
 
+If a failure occurs in the installation process, please download the node module at the following URL
+```http
+  https://xxxxxxxx.com
+```
+
 Run migration
 ```bash
   npm run migrate
