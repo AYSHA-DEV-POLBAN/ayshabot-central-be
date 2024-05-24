@@ -1,10 +1,10 @@
 ## <p align="center"><b>Welcome to AYSHABOT</b></p>
 ------------
 
-AYSHABOT adalah sistem WhatsApp Chatbot yang dikembangkan untuk mempermudah masyarakat dalam menerima layanan informasi
+AYSHABOT adalah sistem WhatsApp Chatbot yang dikembangkan untuk mempermudah masyarakat dalam menerima layanan informasi di Rumah Sakit Islam Aysha Cibinong Bogor.
 
 ## 🔥 PROJECT : API-AYSHABOT
-Backend System Restfull API for Website Knowledge Base
+Backend System Restfull API for Website Knowledge Base Chatbot
 
 ## 💻 Features
 - ??
@@ -99,14 +99,20 @@ Branch
 #### add(num1, num2)
 Takes two numbers and returns the sum.
 
-## 👤 Authors
-
+## 👤 Developer / Colleger / Mahasiswa/i
 - [Bagus Nugroho](https://github.com/brada1604)
 - [Nazwa Fitriyani Zahra](https://github.com/nazwaaca)
 - [Reyna Nur Rahmah Setiana](https://github.com/Reynanur)
 
+## 👤 Supervisor / Dosen Pembimbing
+- Bapak Ade Chandra Nugraha, S.Si., M.T.
+- Bapak Irwan Setiawan, S.Si., M. T.
+
+## 🏢 Partner
+- Rumah Sakit Islam Aysha Cibinong Bogor
+  
 ------------
 
-<p align="center"><b>Made with ❤️ by KoTA 205 JTK POLBAN 2024</b></p>
+<p align="center"><b>Made with ❤️ by Kelompok Tugas Akhir 205 Jurusan Teknik Komputer Politeknik Negeri Bandung 2024</b></p>
 
 
