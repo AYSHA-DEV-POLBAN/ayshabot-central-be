@@ -113,6 +113,6 @@ Takes two numbers and returns the sum.
   
 ------------
 
-<p align="center"><b>Made with ❤️ by Kelompok Tugas Akhir 205 Jurusan Teknik Komputer Politeknik Negeri Bandung 2024</b></p>
+<p align="center"><b>Made with ❤️ by Kelompok Tugas Akhir 205 Jurusan Teknik Komputer dan Informatika Politeknik Negeri Bandung 2024</b></p>
 
 
