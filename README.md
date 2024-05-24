@@ -29,7 +29,7 @@ Install dependencies
 
 If a failure occurs in the installation process, please download the node module at the following URL
 ```http
-  https://xxxxxxxx.com
+  https://drive.google.com/drive/folders/113bDLJlQpOZqtIyxfWFycZiGs--x_YhO
 ```
 
 Run migration
