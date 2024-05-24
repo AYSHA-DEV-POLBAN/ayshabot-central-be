@@ -100,9 +100,9 @@ Branch
 Takes two numbers and returns the sum.
 
 ## 👤 Developer / Colleger / Mahasiswa/i
-- [Bagus Nugroho](https://github.com/brada1604)
-- [Nazwa Fitriyani Zahra](https://github.com/nazwaaca)
-- [Reyna Nur Rahmah Setiana](https://github.com/Reynanur)
+- [211511034 Bagus Nugroho](https://github.com/brada1604)
+- [211511051 Nazwa Fitriyani Zahra](https://github.com/nazwaaca)
+- [211511054 Reyna Nur Rahmah Setiana](https://github.com/Reynanur)
 
 ## 👤 Supervisor / Dosen Pembimbing
 - Bapak Ade Chandra Nugraha, S.Si., M.T.
