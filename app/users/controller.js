@@ -1,10 +1,30 @@
 const User = require("./model");
 const bcrypt = require("bcryptjs");
+const config = require('../../config');
+const jwt = require('jsonwebtoken');
 
 module.exports = {
 	users: async (req, res) => {
 		try {
 			const user = await User.findAll();
+			res.status(200).json({ data: user });
+		} catch (err) {
+			res.status(500).json({ message: err.message || "internal server error" });
+		}
+	},
+	getUserById: async (req, res) => {
+		try {
+			const { id } = req.body;
+			const user = await User.findOne({ where: { id: id } });
+			res.status(200).json({ data: user });
+		} catch (err) {
+			res.status(500).json({ message: err.message || "internal server error" });
+		}
+	},
+	getUserByEmail: async (req, res) => {
+		try {
+			const { email } = req.body;
+			const user = await User.findOne({ where: { email: email } });
 			res.status(200).json({ data: user });
 		} catch (err) {
 			res.status(500).json({ message: err.message || "internal server error" });
@@ -184,6 +204,96 @@ module.exports = {
                 error: 1,
                 message: 'Internal server error',
             });
+        }
+    },
+    actionChangePassword: async (req, res, next) => {
+        const { id } = req.params;
+        try {
+            const { password_old, password_new, password_new_confirmation} = req.body;
+
+            // if (password_old.length) payload.password_old = password_old;
+
+            // Memastikan bahwa user dengan ID tersebut ada
+            let user = await User.findOne({ where: { id: id } });
+
+            if (!user) {
+                return res.status(404).json({
+                    error: 1,
+                    message: "User not found",
+                });
+            }
+
+            // cek apakah password_old sama dengan password account ini?
+            const checkpassword = bcrypt.compareSync(password_old, user.password);
+            if (checkpassword) {
+            	if (password_new == password_new_confirmation) {
+            		const hashedPassword = await bcrypt.hash(password_new, 10);
+
+		            // Mengupdate data user
+		            await User.update({ password: hashedPassword }, { where: { id: id } })
+		                .then((updatedRows) => {
+		                    console.log(`${updatedRows} rows updated successfully.`);
+		                    res.status(200).json({
+								message: "Update Password User Successfully"
+		                    });
+		                })
+		                .catch((err) => {
+		                    console.error('Error:', err);
+		                    res.status(422).json({
+		                        error: 1,
+		                        message: err.message,
+		                        fields: err.errors
+		                    });
+		                });
+            	}
+            	else{
+            		res.status(200).json({
+						message: "Password new berbeda dengan password confirmation",
+					});
+            	}
+            }
+            else {
+            	res.status(200).json({
+					message: "Password old berbeda dengan password pada account",
+				});
+            }
+
+
+
+        } catch (err) {
+            console.error('Error:', err);
+            res.status(500).json({
+                error: 1,
+                message: 'Internal server error',
+            });
+        }
+    },
+    passwordGenerator: async (req, res) => {
+		try {
+			const { password } = req.body;
+			const payload = {};
+
+			// Hash the password
+			const hashedPassword = await bcrypt.hash(password, 10);
+
+			payload.password = password;
+			payload.hashedPassword = hashedPassword
+
+			res.status(200).json({ data: payload });
+		} catch (err) {
+			res.status(500).json({ message: err.message || "internal server error" });
+		}
+	},
+	jwtDecoder: async (req, res, next) => {
+        try {
+            const { token } = req.body;
+           
+            const data = await jwt.verify(token, config.jwtKey);
+
+            res.status(200).json({ data: data });
+
+        } catch (err) { 
+            res.status(500).json({ message: err.message || "internal server error" });
         }
     }
 	
