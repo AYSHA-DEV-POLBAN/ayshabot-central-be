@@ -7,12 +7,13 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var methodOverride = require("method-override");
 var indexRouter = require("./routes/index");
-var usersRouter = require("./app/users/router");
+var authRouter = require("./app/auth/router");
 var bannersRouter = require("./app/banner/router");
 var categoriesRouter = require("./app/categori/router");
 var facilitiesRouter = require("./app/facility/router");
 var productsRouter = require("./app/product/router");
-var authRouter = require("./app/auth/router");
+var usersRouter = require("./app/users/router");
+var roleRouter = require("./app/role/router");
 const URL = "/api/" + process.env.APP_VERSION;
 const sequelize = require("./database/sequelize");
 
@@ -90,6 +91,7 @@ app.use(`${URL}/banners`, bannersRouter);
 app.use(`${URL}/categories`, categoriesRouter);
 app.use(`${URL}/facilities`, facilitiesRouter);
 app.use(`${URL}/products`, productsRouter);
+app.use(`${URL}/role`, roleRouter);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
 	next(createError(404));
