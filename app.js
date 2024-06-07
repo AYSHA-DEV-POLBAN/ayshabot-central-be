@@ -9,6 +9,7 @@ var methodOverride = require("method-override");
 var indexRouter = require("./routes/index");
 var authRouter = require("./app/auth/router");
 var bannersRouter = require("./app/banner/router");
+var categoryInformationRouter = require("./app/categoryInformation/router");
 var clientRouter = require("./app/client/router");
 var categoriesRouter = require("./app/categori/router");
 var facilitiesRouter = require("./app/facility/router");
@@ -88,8 +89,9 @@ app.use("/", indexRouter);
 
 app.use(`${URL}/auth`, authRouter);
 app.use(`${URL}/banners`, bannersRouter);
-app.use(`${URL}/client`, clientRouter);
+app.use(`${URL}/category-information`, categoryInformationRouter);
 app.use(`${URL}/categories`, categoriesRouter);
+app.use(`${URL}/client`, clientRouter);
 app.use(`${URL}/facilities`, facilitiesRouter);
 app.use(`${URL}/products`, productsRouter);
 app.use(`${URL}/role`, roleRouter);
