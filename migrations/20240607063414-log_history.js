@@ -36,15 +36,13 @@ module.exports = {
 					type: Sequelize.TEXT,
 					allowNull: true,
 				},
-				created_at: {
+				createdAt: {
 					type: Sequelize.DATE,
-					allowNull: false,
-					defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+					allowNull: false
 				},
-				updated_at: {
+				updatedAt: {
 					type: Sequelize.DATE,
-					allowNull: false,
-					defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+					allowNull: false
 				},
 			},
 			{

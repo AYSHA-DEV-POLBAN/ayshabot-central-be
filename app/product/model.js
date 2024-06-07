@@ -146,7 +146,7 @@ const Locations = sequelize.define('Locations', {
 //     type: DataTypes.DATE,
 //     allowNull: false,
 //   },
-//   updated_at: {
+//   updatedAt: {
 //     type: DataTypes.DATE,
 //     allowNull: false,
 //   },

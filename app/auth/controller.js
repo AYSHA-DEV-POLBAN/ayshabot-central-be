@@ -1,56 +1,73 @@
-
-const User = require('../users/model')
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const config = require('../../config')
+const User = require("../users/model");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const config = require("../../config");
 module.exports = {
-    signup: async (req, res) => {
-        console.log(req.body);
-        try {
-            const { name, username, email, password } = req.body;
-             // Hash the password
-            const hashedPassword = await bcrypt.hash(password, 10);
+	signup: async (req, res) => {
+		// console.log(req.body);
+		try {
+			const { role_id, name, email, password,status } = req.body;
+			// console.log(req.body);
 
-            const newUser = await User.create({
-                name,
-                username,
-                email,
-                password: hashedPassword,
-        });
-            res.status(200).json({ data: newUser });
-        } catch (err) {
-            res.status(500).json({message: err.message || 'internal server error'});
-        }
-    },
-    signin: async(req,res)=>{
-        const { email, password } = req.body;
-        User.findOne({ where: { email: email } }).then((user)=>{
-          if (user) {
-            const checkpassword = bcrypt.compareSync(password,user.password)
-            if(checkpassword){
-                const token = jwt.sign({
-                    user: {
-                        id: user.id,
-                        name:user.name,
-                        username: user.username,
-                        email: user.email,
-                       
-                    }
-                }, config.jwtKey)
-                res.status(200).json({
-                    data:{token}
-                })  
-            } else {
-                res.status(403).json({
-                    message: 'password yan anda masukan salah / akun belum terdaftar'
-                })  
-            }
-            
-          }else {
-            res.status(403).json({
-                message: 'email yan anda masukan belum terdaptar'
-            })
-        }
-        })
-    }
-}
+			// Hash the password
+			const hashedPassword = await bcrypt.hash(password, 10);
+
+			const newUser = await User.create({
+				role_id,
+				name,
+				email,
+				password: hashedPassword,
+				status,
+			});
+			res.status(200).json({ data: newUser });
+		} catch (err) {
+			res.status(500).json({ message: err.message || "internal server error" });
+		}
+	},
+	signin: async (req, res) => {
+		const { email, password } = req.body;
+		User.findOne({ where: { email: email } }).then((user) => {
+			if (user) {
+				const checkpassword = bcrypt.compareSync(password, user.password);
+				if (checkpassword) {
+					if (user.verify_email == 1) {
+						if (user.status == 1) {
+							const token = jwt.sign(
+							{
+								user: {
+									id: user.id,
+									role_id: user.role_id,
+									name: user.name,
+									email: user.email,
+								},
+							},
+							config.jwtKey
+							);
+							res.status(200).json({
+								data: { token },
+							});
+						}
+						else {
+							res.status(403).json({
+								message: "akun sedang non-aktif",
+							});
+						}	
+					}
+					else {
+						res.status(403).json({
+							message: "email belum di aktivasi oleh administrator",
+						});
+					}
+				} else {
+					res.status(403).json({
+						message: "password yang di masukan salah / akun belum terdaftar",
+					});
+				}
+			} else {
+				res.status(403).json({
+					message: "email yang anda masukan belum terdaftar",
+				});
+			}
+		});
+	},
+};
