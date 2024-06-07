@@ -25,8 +25,8 @@ module.exports = {
 		try {
 			const { id } = req.params;
 
-			const user = await Role.findOne({ where: { id: id } });
-			if (user) {
+			const role = await Role.findOne({ where: { id: id } });
+			if (role) {
 				await Role.destroy({ where: { id: id } });
 
 				res.status(200).json({

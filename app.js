@@ -9,6 +9,7 @@ var methodOverride = require("method-override");
 var indexRouter = require("./routes/index");
 var authRouter = require("./app/auth/router");
 var bannersRouter = require("./app/banner/router");
+var clientRouter = require("./app/client/router");
 var categoriesRouter = require("./app/categori/router");
 var facilitiesRouter = require("./app/facility/router");
 var productsRouter = require("./app/product/router");
@@ -86,12 +87,13 @@ app.use("/", indexRouter);
 // });
 
 app.use(`${URL}/auth`, authRouter);
-app.use(`${URL}/users`, usersRouter);
 app.use(`${URL}/banners`, bannersRouter);
+app.use(`${URL}/client`, clientRouter);
 app.use(`${URL}/categories`, categoriesRouter);
 app.use(`${URL}/facilities`, facilitiesRouter);
 app.use(`${URL}/products`, productsRouter);
 app.use(`${URL}/role`, roleRouter);
+app.use(`${URL}/users`, usersRouter);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
 	next(createError(404));
