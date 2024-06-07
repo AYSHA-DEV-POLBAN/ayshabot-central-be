@@ -29,4 +29,24 @@ module.exports = {
 			res.status(500).json({ message: err.message || "internal server error" });
 		}
 	},
+	actionDelete: async (req, res) => {
+        try {
+            const { id } = req.params;
+			
+			if (id != 1) {
+	            await User.destroy({ where:{id: id} });
+	          
+	            res.status(200).json({
+	                message: "Berhasil Hapus User"
+	            })
+			}   
+			else {
+				res.status(200).json({
+	                message: "Superadmin Cannot Delete"
+	            })
+			}
+        } catch (err) {
+            res.status(500).json({message: err.message || 'internal server error'})
+        }
+    },
 };
