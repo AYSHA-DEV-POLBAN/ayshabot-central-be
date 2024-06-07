@@ -67,6 +67,7 @@ Format Pesan Commit :
 ```
 
 Type : 
+- ADD : commit untuk menambah folder, file
 - DEL : commit untuk menghapus folder, file, atau source code.
 - FEAT : commit untuk penambahan fitur.
 - FIX : commit untuk memperbaiki penamaan function/variabel clean code.
