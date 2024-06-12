@@ -1,14 +1,24 @@
 const User = require("./model");
+const { logHistoryCreated } = require('../logHistory/controller');
 const bcrypt = require("bcryptjs");
 const config = require('../../config');
 const jwt = require('jsonwebtoken');
 
 module.exports = {
-	users: async (req, res) => {
+	index: async (req, res) => {
+		// logHistoryCreated(1, null, "user", "test", "test2", "test3");
+
 		try {
 			const user = await User.findAll();
+
+			// LOGGING
+			logHistoryCreated(req.user.id, null, User.getTableName().tableName, "GET DATA", JSON.stringify(user.map(user => user.dataValues), null, 4) + " --> " + req.user.email, "User.findAll()");
+
 			res.status(200).json({ data: user });
 		} catch (err) {
+			// LOGGING
+			logHistoryCreated(req.user.id, null, User.getTableName().tableName, "ERROR", "-", err.message || "internal server error");
+
 			res.status(500).json({ message: err.message || "internal server error" });
 		}
 	},
@@ -32,7 +42,16 @@ module.exports = {
 	},
 	add_operator: async (req, res) => {
 		try {
-			const { role_id, name, email, password, status } = req.body;
+			const { name, email, } = req.body;
+
+			// Default role_id
+			role_id = 2;
+
+			// Default password
+			password = "1234567890";
+
+			// Default status
+			status = 1;
 
 			// Hash the password
 			const hashedPassword = await bcrypt.hash(password, 10);

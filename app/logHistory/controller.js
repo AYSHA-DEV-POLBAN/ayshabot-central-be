@@ -21,6 +21,26 @@ module.exports = {
 			res.status(500).json({ message: err.message || "internal server error" });
 		}
 	},
+	logHistoryCreated: async (user_id, client_id, table_name, action_name, action_data, log_description) => {
+		try {
+			// const { user_id, client_id, table_name, action_name, action_data, log_description} = req.body;
+
+			const newLogHistory = await LogHistory.create({
+				user_id, client_id, table_name, action_name, action_data, log_description
+			});
+
+			console.log("============= LOG HISTORY =============");
+			console.log("code : 200");
+			console.log("status : Log History berhasil dibuat");
+			console.log("=======================================");
+			// res.status(200).json({ data: newLogHistory, status: "Log History berhasil dibuat" });
+		} catch (err) {
+			console.log("============= LOG HISTORY =============");
+			console.log(err.message || "internal server error");
+			console.log("=======================================");
+			// res.status(500).json({ message: err.message || "internal server error" });
+		}
+	},
 	actionDelete: async (req, res) => {
 		try {
 			const { id } = req.params;

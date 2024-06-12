@@ -51,7 +51,7 @@ module.exports = {
         } catch (err) { 
             console.log(err);
             res.status(401).json({
-                error:'not authorized to access Or you are not an administrator'
+                error:'not authorized to access or you are not an administrator'
             })
         }
     },
