@@ -24,7 +24,7 @@ module.exports = {
 	},
 	getUserById: async (req, res) => {
 		try {
-			const { id } = req.body;
+			const { id } = req.params;
 			const user = await User.findOne({ where: { id: id } });
 			res.status(200).json({ data: user });
 		} catch (err) {

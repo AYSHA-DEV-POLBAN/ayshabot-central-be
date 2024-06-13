@@ -17,7 +17,7 @@ const {
 const { isLoginAdmin, isLoginUser } = require('../middleware/auth');
 
 router.get('/', isLoginAdmin, index);
-router.get('/get_user_by_id', isLoginUser, getUserById);
+router.get('/get_user_by_id/:id', isLoginUser, getUserById);
 router.get('/get_user_by_email', isLoginUser, getUserByEmail);
 router.post('/add_operator', isLoginAdmin, add_operator);
 router.delete('/delete/:id', isLoginAdmin, actionDelete);
