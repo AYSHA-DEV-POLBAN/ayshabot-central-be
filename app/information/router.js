@@ -13,6 +13,6 @@ router.get('/', isLoginUser, index);
 router.post('/create', isLoginUser, actionCreated);
 router.delete('/delete/:id', isLoginUser, actionDelete);
 router.put('/edit/:id', isLoginUser, actionEdit);
-router.put('/activate_command/:id', isLoginUser, actionActivateInformation);
-router.put('/deactivate_command/:id', isLoginUser, actionDeactivateInformation);
+router.put('/activate_information/:id', isLoginUser, actionActivateInformation);
+router.put('/deactivate_information/:id', isLoginUser, actionDeactivateInformation);
 module.exports = router;
