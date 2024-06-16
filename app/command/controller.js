@@ -1,4 +1,5 @@
 const Command = require("./model");
+const { logHistoryCreated } = require('../logHistory/controller');
 
 module.exports = {
 	index: async (req, res) => {
