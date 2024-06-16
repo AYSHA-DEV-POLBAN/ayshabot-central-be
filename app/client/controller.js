@@ -1,4 +1,5 @@
 const Client = require("./model");
+const { logHistoryCreated } = require('../logHistory/controller');
 const { Op } = require('sequelize'); //digunakan untuk operator kueri.
 const moment = require('moment'); // Pastikan menginstal moment untuk memudahkan manipulasi tanggal
 
@@ -8,6 +9,17 @@ module.exports = {
 			const client = await Client.findAll();
 			res.status(200).json({ data: client });
 		} catch (err) {
+			res.status(500).json({ message: err.message || "internal server error" });
+		}
+	},
+	getClientById: async (req, res) => {
+		try {
+			const { id } = req.params;
+			const client = await Client.findOne({ where: { id: id } });
+			logHistoryCreated(req.user.id, null, Client.getTableName().tableName, "GET DATA", JSON.stringify(client, null, 4) + " --> " + req.user.email, "Client.findOne({ where: { id: id } })");
+			res.status(200).json({ data: client });
+		} catch (err) {
+			logHistoryCreated(req.user.id, null, Client.getTableName().tableName, "ERROR", "-", err.message || "internal server error");
 			res.status(500).json({ message: err.message || "internal server error" });
 		}
 	},
