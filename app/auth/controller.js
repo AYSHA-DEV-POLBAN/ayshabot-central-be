@@ -7,7 +7,7 @@ const config = require("../../config");
 module.exports = {
 	signup: async (req, res) => {
 		try {
-			const { role_id, name, email, password,status } = req.body;
+			const { role_id, name, email, password,status,verify_email } = req.body;
 
 			// Hash the password
 			const hashedPassword = await bcrypt.hash(password, 10);
@@ -18,6 +18,7 @@ module.exports = {
 				email,
 				password: hashedPassword,
 				status,
+				verify_email,
 			});
 
 			// LOGGING
