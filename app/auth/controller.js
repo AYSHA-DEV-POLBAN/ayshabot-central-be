@@ -44,7 +44,7 @@ module.exports = {
 							config.jwtKey
 							);
 							res.status(200).json({
-								data: { token },
+								data: { token }, role_id : user.role_id
 							});
 						}
 						else {
