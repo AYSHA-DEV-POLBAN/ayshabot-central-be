@@ -1,4 +1,5 @@
 const Conversation = require("./model");
+const { logHistoryCreated } = require('../logHistory/controller');
 const { Op } = require('sequelize'); //digunakan untuk operator kueri.
 const moment = require('moment'); // Pastikan menginstal moment untuk memudahkan manipulasi tanggal
 
@@ -8,6 +9,17 @@ module.exports = {
 			const conversation = await Conversation.findAll();
 			res.status(200).json({ data: conversation });
 		} catch (err) {
+			res.status(500).json({ message: err.message || "internal server error" });
+		}
+	},
+	getConversationById: async (req, res) => {
+		try {
+			const { id } = req.params;
+			const conversation = await Conversation.findOne({ where: { id: id } });
+			logHistoryCreated(req.user.id, null, Conversation.getTableName().tableName, "GET DATA", JSON.stringify(conversation, null, 4) + " --> " + req.user.email, "Conversation.findOne({ where: { id: id } })");
+			res.status(200).json({ data: conversation });
+		} catch (err) {
+			logHistoryCreated(req.user.id, null, Conversation.getTableName().tableName, "ERROR", "-", err.message || "internal server error");
 			res.status(500).json({ message: err.message || "internal server error" });
 		}
 	},
