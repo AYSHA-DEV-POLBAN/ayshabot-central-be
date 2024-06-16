@@ -10,6 +10,10 @@ module.exports = {
 		}
 	},
 	actionCreated: async (req, res) => {
+		console.log("=================");
+		console.log(req.user);
+		console.log(req.body);
+		console.log("=================");
 		try {
 			const { name_command,  response_command} = req.body;
 
