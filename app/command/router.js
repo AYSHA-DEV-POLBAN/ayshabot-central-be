@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 const { 
 	index,
+	getCommandById,
+	actionCheckResponseCommand,
 	actionCreated,
 	actionDelete,
 	actionEdit,
@@ -10,6 +12,8 @@ const {
 const { isLoginAdmin, isLoginUser } = require('../middleware/auth');
 
 router.get('/', isLoginUser, index);
+router.get('/get_command_by_id/:id', isLoginUser, getCommandById);
+router.post('/check_response_command', actionCheckResponseCommand);
 router.post('/create', isLoginUser, actionCreated);
 router.delete('/delete/:id', isLoginUser, actionDelete);
 router.put('/edit/:id', isLoginUser, actionEdit);

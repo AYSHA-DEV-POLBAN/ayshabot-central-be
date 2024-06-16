@@ -5,16 +5,45 @@ module.exports = {
 	index: async (req, res) => {
 		try {
 			const command = await Command.findAll();
+			logHistoryCreated(req.user.id, null, Command.getTableName().tableName, "GET DATA", JSON.stringify(command.map(command => command.dataValues), null, 4) + " --> " + req.user.email, "Command.findAll()");
 			res.status(200).json({ data: command });
 		} catch (err) {
+			logHistoryCreated(req.user.id, null, Command.getTableName().tableName, "ERROR", "-", err.message || "internal server error");
+			res.status(500).json({ message: err.message || "internal server error" });
+		}
+	},
+	getCommandById: async (req, res) => {
+		try {
+			const { id } = req.params;
+			const command = await Command.findOne({ where: { id: id } });
+			logHistoryCreated(req.user.id, null, Command.getTableName().tableName, "GET DATA", JSON.stringify(command, null, 4) + " --> " + req.user.email, "Command.findOne({ where: { id: id } })");
+			res.status(200).json({ data: command });
+		} catch (err) {
+			logHistoryCreated(req.user.id, null, Command.getTableName().tableName, "ERROR", "-", err.message || "internal server error");
+			res.status(500).json({ message: err.message || "internal server error" });
+		}
+	},
+	actionCheckResponseCommand: async (req, res) => {
+		try {
+			const { name_command } = req.body;
+
+			const command = await Command.findOne({ where: { name_command : name_command, status_command : 1 } });
+
+			if (command) {
+				logHistoryCreated(null, null, Command.getTableName().tableName, "GET DATA", JSON.stringify(command, null, 4) + " --> " + null, "Command.findOne({ where: { name_command : name_command, status_command : 1 } })");
+				res.status(200).json({ data: command, status: "Command bisa dipakai" });
+			}
+			else {
+				logHistoryCreated(null, null, Command.getTableName().tableName, "ERROR", "-", "Data Command tidak ada / Command sedang dalam status deactive");
+				res.status(500).json({ message : "Data Command tidak ada / Command sedang dalam status deactive" });
+			}
+
+		} catch (err) {
+			logHistoryCreated(null, null, Command.getTableName().tableName, "ERROR", "-", err.message || "internal server error");
 			res.status(500).json({ message: err.message || "internal server error" });
 		}
 	},
 	actionCreated: async (req, res) => {
-		console.log("=================");
-		console.log(req.user);
-		console.log(req.body);
-		console.log("=================");
 		try {
 			const { name_command,  response_command} = req.body;
 
@@ -23,8 +52,10 @@ module.exports = {
 			const newCommand = await Command.create({
 				name_command, response_command, status_command
 			});
+			logHistoryCreated(req.user.id, null, Command.getTableName().tableName, "CREATE DATA", JSON.stringify(newCommand, null, 4) + " --> " + req.user.email, "Command.create({ name_command, description_command });");
 			res.status(200).json({ data: newCommand, status: "Command berhasil dibuat" });
 		} catch (err) {
+			logHistoryCreated(req.user.id, null, Command.getTableName().tableName, "ERROR", "-", err.message || "internal server error");
 			res.status(500).json({ message: err.message || "internal server error" });
 		}
 	},
@@ -36,15 +67,14 @@ module.exports = {
 			if (command) {
 				await Command.destroy({ where: { id: id } });
 
-				res.status(200).json({
-					message: "Berhasil Hapus Command",
-				});
+				logHistoryCreated(req.user.id, null, Command.getTableName().tableName, "DELETE DATA", JSON.stringify(req.params, null, 4) + " --> " + req.user.email, "Command.destroy({ where: { id: id } })");
+				res.status(200).json({ message: "Berhasil Hapus Command", });
 			} else {
-				res.status(200).json({
-					message: "Data Command tidak ada",
-				});
+				logHistoryCreated(req.user.id, null, Command.getTableName().tableName, "ERROR", "-", "Data Command tidak ada");
+				res.status(200).json({ message: "Data Command tidak ada", });
 			}
 		} catch (err) {
+			logHistoryCreated(req.user.id, null, Command.getTableName().tableName, "ERROR", "-", err.message || "internal server error");
 			res.status(500).json({ message: err.message || "internal server error" });
 		}
 	},
@@ -58,10 +88,7 @@ module.exports = {
             let command = await Command.findOne({ where: { id: id } });
 
             if (!command) {
-                return res.status(404).json({
-                    error: 1,
-                    message: "Command not found",
-                });
+                return res.status(404).json({ error: 1, message: "Command not found", });
             }
 
             if (command.name_command != name_command) {
@@ -72,34 +99,29 @@ module.exports = {
             	if (response_command.length) payload.response_command = response_command;
             }
 
+            data = {};
+            data.id = id;
+            data.name_command = payload.name_command || command.name_command;
+            data.response_command = payload.response_command || command.response_command;
+
+
             // Mengupdate data command
             await Command.update(payload, { where: { id: id } })
                 .then((updatedRows) => {
+                	logHistoryCreated(req.user.id, null, Command.getTableName().tableName, "UPDATE DATA", JSON.stringify(data, null, 4) + " --> " + req.user.email, "Command.update(payload, { where: { id: id } })");
                     console.log(`${updatedRows} rows updated successfully.`);
-                    res.status(200).json({
-                        data: {
-                            id: id,
-                            name_command: payload.name_command || command.name_command,
-                            response_command: payload.response_command || command.response_command,
-                        },
-						message: "Update Command Successfully"
-                    });
+                    res.status(200).json({ data: data, message: "Update Command Successfully" });
                 })
                 .catch((err) => {
                     console.error('Error:', err);
-                    res.status(422).json({
-                        error: 1,
-                        message: err.message,
-                        fields: err.errors
-                    });
+                    logHistoryCreated(req.user.id, null, Command.getTableName().tableName, "ERROR", "-", err.message || "internal server error");
+                    res.status(422).json({ error: 1, message: err.message, fields: err.errors });
                 });
 
         } catch (err) {
             console.error('Error:', err);
-            res.status(500).json({
-                error: 1,
-                message: 'Internal server error',
-            });
+            logHistoryCreated(req.user.id, null, Command.getTableName().tableName, "ERROR", "-", err.message || "internal server error");
+            res.status(500).json({ error: 1, message: 'Internal server error', });
         }
     },
     actionActivateCommand: async (req, res) => {
@@ -110,15 +132,15 @@ module.exports = {
 			if (command) {
 				await Command.update({ status_command: 1 }, { where: { id: id } })
 
-				res.status(200).json({
-					message: "Berhasil Aktivasi Command",
-				});
+				// logHistoryCreated(req.user.id, null, Command.getTableName().tableName, "UPDATE DATA", JSON.stringify(command, null, 4) + " --> " + req.user.email, "Command.findOne({ where: { id: id } })");
+
+				res.status(200).json({ message: "Berhasil Aktivasi Command", });
 			} else {
-				res.status(200).json({
-					message: "Data Command tidak ditemukan",
-				});
+				logHistoryCreated(req.user.id, null, Command.getTableName().tableName, "ERROR", "-", "Data Command tidak ditemukan");
+				res.status(200).json({ message: "Data Command tidak ditemukan", });
 			}
 		} catch (err) {
+			logHistoryCreated(req.user.id, null, Command.getTableName().tableName, "ERROR", "-", err.message || "internal server error");
 			res.status(500).json({ message: err.message || "internal server error" });
 		}
 	},
@@ -130,15 +152,15 @@ module.exports = {
 			if (command) {
 				await Command.update({ status_command: 0 }, { where: { id: id } })
 
-				res.status(200).json({
-					message: "Berhasil Deaktivasi Command",
-				});
+				// logHistoryCreated(req.user.id, null, Command.getTableName().tableName, "GET DATA", JSON.stringify(command, null, 4) + " --> " + req.user.email, "Command.findOne({ where: { id: id } })");
+
+				res.status(200).json({ message: "Berhasil Deaktivasi Command", });
 			} else {
-				res.status(200).json({
-					message: "Data Command tidak ditemukan",
-				});
+				logHistoryCreated(req.user.id, null, Command.getTableName().tableName, "ERROR", "-", "Data Command tidak ditemukan");
+				res.status(200).json({ message: "Data Command tidak ditemukan", });
 			}
 		} catch (err) {
+			logHistoryCreated(req.user.id, null, Command.getTableName().tableName, "ERROR", "-", err.message || "internal server error");
 			res.status(500).json({ message: err.message || "internal server error" });
 		}
 	},

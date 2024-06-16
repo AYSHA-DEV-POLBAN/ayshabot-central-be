@@ -51,9 +51,7 @@ module.exports = {
 				res.status(200).json({ message: "Berhasil Hapus Category Information", });
 			} else {
 				logHistoryCreated(req.user.id, null, CategoryInformation.getTableName().tableName, "ERROR", "-", "Data category information tidak ada");
-				res.status(200).json({
-					message: "Data category information tidak ada",
-				});
+				res.status(200).json({ message: "Data category information tidak ada", });
 			}
 		} catch (err) {
 			logHistoryCreated(req.user.id, null, CategoryInformation.getTableName().tableName, "ERROR", "-", err.message || "internal server error");
@@ -86,19 +84,19 @@ module.exports = {
             	if (description_category_information.length) payload.description_category_information = description_category_information;
             }
 
-            datas = {};
-            datas.id = id;
-            datas.name_category_information = payload.name_category_information || category_information.name_category_information;
-            datas.description_category_information = payload.description_category_information || category_information.description_category_information;
+            data = {};
+            data.id = id;
+            data.name_category_information = payload.name_category_information || category_information.name_category_information;
+            data.description_category_information = payload.description_category_information || category_information.description_category_information;
 
 
             // Mengupdate data category_information
             await CategoryInformation.update(payload, { where: { id: id } })
                 .then((updatedRows) => {
                     console.log(`${updatedRows} rows updated successfully.`);
-                    logHistoryCreated(req.user.id, null, CategoryInformation.getTableName().tableName, "GET DATA", JSON.stringify(datas, null, 4) + " --> " + req.user.email, "CategoryInformation.update(payload, { where: { id: id } })");
+                    logHistoryCreated(req.user.id, null, CategoryInformation.getTableName().tableName, "GET DATA", JSON.stringify(data, null, 4) + " --> " + req.user.email, "CategoryInformation.update(payload, { where: { id: id } })");
                     res.status(200).json({
-                        data: datas,
+                        data: data,
 						message: "Update Category Information Successfully"
                     });
                 })
