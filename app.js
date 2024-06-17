@@ -8,19 +8,17 @@ var logger = require("morgan");
 var methodOverride = require("method-override");
 
 var indexRouter = require("./routes/index");
+
 var authRouter = require("./app/auth/router");
-// var bannersRouter = require("./app/banner/router");
 var categoryInformationRouter = require("./app/categoryInformation/router");
-// var categoriesRouter = require("./app/categori/router");
 var clientRouter = require("./app/client/router");
 var commandRouter = require("./app/command/router");
 var conversationRouter = require("./app/conversation/router");
-// var facilitiesRouter = require("./app/facility/router");
-var InformationRouter = require("./app/information/router");
+var informationRouter = require("./app/information/router");
 var logHistoryRouter = require("./app/logHistory/router");
-// var productsRouter = require("./app/product/router");
-var usersRouter = require("./app/users/router");
 var roleRouter = require("./app/role/router");
+var usersRouter = require("./app/users/router");
+
 const URL = "/api/" + process.env.APP_VERSION;
 const sequelize = require("./database/sequelize");
 
@@ -31,8 +29,9 @@ console.log("|                                               |");
 console.log("| PROJECT      : " + process.env.APP_NAME + " |");
 console.log("| VERSION      : " + process.env.APP_VERSION + "                             |");
 console.log("| CREATED YEAR : 2024                           |");
-console.log("| URL          : " + URL + "                        |");
 console.log("| PORT         : " + process.env.PORT + "                           |");
+console.log("| URL APP      : " + process.env.BASE_URL + ":" + process.env.PORT + "/" +  "         |");
+console.log("| URL ENDPOINT : " + process.env.BASE_URL + ":" + process.env.PORT + URL + "   |");
 console.log("|                                               |");
 console.log("|===============================================|");
 console.log();
@@ -100,7 +99,7 @@ app.use(`${URL}/client`, clientRouter);
 app.use(`${URL}/command`, commandRouter);
 app.use(`${URL}/conversation`, conversationRouter);
 // app.use(`${URL}/facilities`, facilitiesRouter);
-app.use(`${URL}/information`, InformationRouter);
+app.use(`${URL}/information`, informationRouter);
 app.use(`${URL}/log-history`, logHistoryRouter);
 // app.use(`${URL}/products`, productsRouter);
 app.use(`${URL}/role`, roleRouter);

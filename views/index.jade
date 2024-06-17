@@ -1,5 +1,104 @@
-extends layout
+doctype html
+html(lang="en")
+  head
+    meta(charset="utf-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title= title
+    meta(name="description" content="")
+    meta(name="keywords" content="")
 
-block content
-  h1= title
-  p Welcome to #{title}
+    // Favicons
+    link(rel="icon" href="/assets/img/favicon.png")
+    link(rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png")
+
+    // Fonts
+    link(rel="preconnect" href="https://fonts.googleapis.com")
+    link(rel="preconnect" href="https://fonts.gstatic.com" crossorigin)
+    link(rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap")
+
+    // Vendor CSS Files
+    link(rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.min.css")
+    link(rel="stylesheet" href="/assets/vendor/bootstrap-icons/bootstrap-icons.css")
+
+    // Main CSS File
+    link(rel="stylesheet" href="/assets/css/main.css")
+
+  body.index-page
+    header#header.header.d-flex.align-items-center.fixed-top
+      .container-fluid.container-xl.position-relative.d-flex.align-items-center
+        a.logo.d-flex.align-items-center.me-auto(href="#")
+          // Uncomment the line below if you also wish to use an image logo
+          // img(src="/assets/img/logo.png" alt="")
+          h1.sitename Ayshabot
+
+        nav#navmenu.navmenu
+          i.mobile-nav-toggle.d-xl-none.bi.bi-list
+
+    main.main
+      // Hero Section
+      section#hero.hero.section
+        .container
+          .row.gy-4
+            .col-lg-6.order-2.order-lg-1.d-flex.flex-column.justify-content-center(data-aos="zoom-out")
+              h1 API AYSHABOT
+              p website ini adalah website restfull API untuk ayshabot
+              .d-flex
+                a.btn-get-started(href="#") Get Started
+                a.glightbox.btn-watch-video.d-flex.align-items-center(href="#")
+                  i.bi.bi-play-circle
+                  span Watch Video
+            .col-lg-6.order-1.order-lg-2.hero-img(data-aos="zoom-out" data-aos-delay="200")
+              img.img-fluid.animated(src="/assets/img/hero-img.png" alt="")
+
+    footer#footer.footer
+      .container.footer-top
+        .row.gy-4
+          .col-lg-4.col-md-6.footer-about
+            a.d-flex.align-items-center(href="index.html")
+              span.sitename Ayshabot
+            .footer-contact.pt-3
+              p Jalan Acropolis Utara, RT.06/RW.18, Karadenan
+              p Cibinong, Bogor Regency, West Java 16913
+              p.mt-3
+                strong Phone:
+                span 081261262822
+              p
+                strong Email:
+                span humas@rsislamaysha.com
+
+          .col-lg-4.col-md-12
+            h4 Follow Us
+            p Kenali lebih dekat dengan menghubungi media sosial kami.
+            .social-links.d-flex
+              a(href="#")
+                i.bi.bi-twitter-x
+              a(href="#")
+                i.bi.bi-facebook
+              a(href="#")
+                i.bi.bi-instagram
+              a(href="#")
+                i.bi.bi-linkedin
+
+      .container.copyright.text-center.mt-4
+        p © 
+          span Copyright
+          | 2024 
+          strong.px-1.sitename Ayshabot
+          span All Rights Reserved
+        .credits
+          | Designed by 
+          a(href="#") KoTA 205 JTK POLBAN
+
+    // Scroll Top
+    a#scroll-top.scroll-top.d-flex.align-items-center.justify-content-center(href="#")
+      i.bi.bi-arrow-up-short
+
+    // Preloader
+    #preloader
+
+    // Vendor JS Files
+    script(src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js")
+    script(src="/assets/vendor/isotope-layout/isotope.pkgd.min.js")
+
+    // Main JS File
+    script(src="/assets/js/main.js")
