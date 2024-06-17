@@ -6,6 +6,7 @@ var session = require("express-session");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var methodOverride = require("method-override");
+
 var indexRouter = require("./routes/index");
 var authRouter = require("./app/auth/router");
 // var bannersRouter = require("./app/banner/router");
