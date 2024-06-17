@@ -1,4 +1,5 @@
 const Role = require("./model");
+const { logHistoryCreated } = require('../logHistory/controller');
 
 module.exports = {
 	index: async (req, res) => {
@@ -6,6 +7,17 @@ module.exports = {
 			const role = await Role.findAll();
 			res.status(200).json({ data: role });
 		} catch (err) {
+			res.status(500).json({ message: err.message || "internal server error" });
+		}
+	},
+	getRoleById: async (req, res) => {
+		try {
+			const { id } = req.params;
+			const role = await Role.findOne({ where: { id: id } });
+			logHistoryCreated(req.user.id, null, Role.getTableName().tableName, "GET DATA", JSON.stringify(role, null, 4) + " --> " + req.user.email, "Role.findOne({ where: { id: id } })");
+			res.status(200).json({ data: role });
+		} catch (err) {
+			logHistoryCreated(req.user.id, null, Role.getTableName().tableName, "ERROR", "-", err.message || "internal server error");
 			res.status(500).json({ message: err.message || "internal server error" });
 		}
 	},
