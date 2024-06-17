@@ -1,5 +1,9 @@
 const Information = require("./model");
+const path = require('path')
+const fs = require('fs')
+const config = require('../../config')
 const { logHistoryCreated } = require('../logHistory/controller');
+const multer  = require('multer');
 
 module.exports = {
 	index: async (req, res) => {
@@ -34,6 +38,44 @@ module.exports = {
 		} catch (err) {
 			res.status(500).json({ message: err.message || "internal server error" });
 		}
+	},
+	actionCreatedUploadFile: async (req, res, next) => {
+		try {
+            const { category_information_id, title_information, description_information } = req.body;
+
+            if (req.file) {
+                let temporary_path = req.file.path;
+                let original_extension = req.file.originalname.split('.')[req.file.originalname.split('.').length - 1];
+                let filename = req.file.filename + '.' + original_extension;
+                let target_path = path.resolve(config.rootPath, `public/uploads/document_information/${filename}`);
+                const base_url = `${req.protocol}://${req.get('host')}`;
+                let file_path_information = base_url + "/uploads/document_information/" + filename;
+
+                var status_information = 1;
+
+                const src = fs.createReadStream(temporary_path);
+                const destination = fs.createWriteStream(target_path);
+
+                src.pipe(destination)
+                src.on('end', async () => {
+                    try {
+                        const newInformation = await Information.create({
+                            category_information_id, title_information, description_information, file_path_information, status_information
+                        });
+                        res.status(200).json({ data: newInformation })
+                    } catch (err) {
+                        if (err && err.name === 'SequelizeValidationError') {
+                            return res.status(422).json({ error: 1, message: err.message, fields: err.errors })
+                        }
+                        next(err);
+                    }
+                });
+            } else {
+                res.status(500).json({ message: 'Document is required!' })
+            }
+        } catch (err) {
+            res.status(500).json({ message: err.message || 'internal server error' })
+        }
 	},
 	actionDelete: async (req, res) => {
 		try {
