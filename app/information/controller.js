@@ -83,6 +83,18 @@ module.exports = {
 
 			const information = await Information.findOne({ where: { id: id } });
 			if (information) {
+
+                const path_old = information.file_path_information;
+
+                // Split the string by "/" and get the last element
+                const parts = path_old.split('/');
+                const filename_old = parts[parts.length - 1];
+                
+                let old_document = `${config.rootPath}/public/uploads/document_information/${filename_old}`;
+                if (fs.existsSync(old_document)) {
+                    fs.unlinkSync(old_document)
+                }
+
 				await Information.destroy({ where: { id: id } });
 
 				res.status(200).json({
