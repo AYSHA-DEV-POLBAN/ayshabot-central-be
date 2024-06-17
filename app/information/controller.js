@@ -1,4 +1,5 @@
 const Information = require("./model");
+const { logHistoryCreated } = require('../logHistory/controller');
 
 module.exports = {
 	index: async (req, res) => {
@@ -6,6 +7,17 @@ module.exports = {
 			const information = await Information.findAll();
 			res.status(200).json({ data: information });
 		} catch (err) {
+			res.status(500).json({ message: err.message || "internal server error" });
+		}
+	},
+	getInformationById: async (req, res) => {
+		try {
+			const { id } = req.params;
+			const information = await Information.findOne({ where: { id: id } });
+			logHistoryCreated(req.user.id, null, Information.getTableName().tableName, "GET DATA", JSON.stringify(information, null, 4) + " --> " + req.user.email, "Information.findOne({ where: { id: id } })");
+			res.status(200).json({ data: information });
+		} catch (err) {
+			logHistoryCreated(req.user.id, null, Information.getTableName().tableName, "ERROR", "-", err.message || "internal server error");
 			res.status(500).json({ message: err.message || "internal server error" });
 		}
 	},
