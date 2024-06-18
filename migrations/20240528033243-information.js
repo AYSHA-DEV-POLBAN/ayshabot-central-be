@@ -32,6 +32,18 @@ module.exports = {
 					type: Sequelize.INTEGER,
 					allowNull: false,
 				},
+				chunk_total: {
+					type: Sequelize.INTEGER,
+					allowNull: true,
+				},
+				chunk_ids_min: {
+					type: Sequelize.INTEGER,
+					allowNull: true,
+				},
+				chunk_ids_max: {
+					type: Sequelize.INTEGER,
+					allowNull: true,
+				},
 				createdAt: {
 					type: Sequelize.DATE,
 					allowNull: false

@@ -7,7 +7,7 @@ const config = require("../../config");
 module.exports = {
 	signup: async (req, res) => {
 		try {
-			const { role_id, name, email, password,status,verify_email } = req.body;
+			const { role_id, name, email, password, status, verify_email } = req.body;
 
 			// Hash the password
 			const hashedPassword = await bcrypt.hash(password, 10);
@@ -21,14 +21,21 @@ module.exports = {
 				verify_email,
 			});
 
-			// LOGGING
-			logHistoryCreated(null, null, User.getTableName().tableName, "INSERT DATA", JSON.stringify(req.body, null, 4), "Sign Up");
-			
-			res.status(200).json({ data: newUser });
-		} catch (err) {
-			// LOGGING
-			logHistoryCreated(null, null, User.getTableName().tableName, "ERROR", "-", err.message || "internal server error");
+			status_code = 200;
+			message = "Yeay! Sign Up Successfully.";
 
+			// LOGGING
+			logHistoryCreated(null, null, User.getTableName().tableName, "SIGN UP - SUCCESS", JSON.stringify(req.body, null, 4), "Status : " + status_code + "Message : " + message);
+			
+			res.status(status_code).json({ status_code : status_code, message : message, data: newUser });
+
+		} catch (err) {
+			status_code = 200;
+
+			// LOGGING
+			// logHistoryCreated(null, null, User.getTableName().tableName, "SIGN UP - ERROR", "-", "Status : " + status_code + "Message : " + err.message || "internal server error");
+
+			console.log(err);
 			res.status(500).json({ message: err.message || "internal server error" });
 		}
 	},
@@ -52,20 +59,27 @@ module.exports = {
 							config.jwtKey
 							);
 
-							// LOGGING
-							logHistoryCreated(null, null, User.getTableName().tableName, "Get DATA", JSON.stringify(token, null, 4), "Sign In");
+							data = {};
+							data.token = token;
+							data.role_id = user.role_id;
 
-							res.status(200).json({
-								data: { token }, role_id : user.role_id
-							});
+							status = 200;
+							message = "Yeay! Sign In Successfully.";
+
+
+							// LOGGING
+							logHistoryCreated(null, null, User.getTableName().tableName, "SIGN IN - SUCCESS", JSON.stringify(token, null, 4), "Status : " + status + "Message : " + message);
+
+							res.status(status).json({ data: data });
 						}
 						else {
-							// LOGGING
-							logHistoryCreated(null, null, User.getTableName().tableName, "ERROR", "-", "akun sedang non-aktif");
+							status = 200;
+							message = "akun sedang non-akti";
 
-							res.status(403).json({ 
-								message: "akun sedang non-aktif",
-							});
+							// LOGGING
+							logHistoryCreated(null, null, User.getTableName().tableName, "SIGN IN - ERROR", "-", "akun sedang non-aktif");
+
+							res.status(403).json({  message: "akun sedang non-aktif", });
 						}	
 					}
 					else {

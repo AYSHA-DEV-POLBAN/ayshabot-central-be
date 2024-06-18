@@ -18,6 +18,7 @@ var informationRouter = require("./app/information/router");
 var logHistoryRouter = require("./app/logHistory/router");
 var roleRouter = require("./app/role/router");
 var usersRouter = require("./app/users/router");
+var whatsappDeviceRouter = require("./app/whatsappDevice/router");
 
 const URL = "/api/" + process.env.APP_VERSION;
 const sequelize = require("./database/sequelize");
@@ -100,6 +101,7 @@ app.use(`${URL}/information`, informationRouter);
 app.use(`${URL}/log-history`, logHistoryRouter);
 app.use(`${URL}/role`, roleRouter);
 app.use(`${URL}/users`, usersRouter);
+app.use(`${URL}/whatsapp-device`, whatsappDeviceRouter);
 app.use(function (req, res, next) {
 	next(createError(404));
 });
