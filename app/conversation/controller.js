@@ -1,12 +1,21 @@
 const Conversation = require("./model");
+const Client = require("../client/model");
 const { logHistoryCreated } = require('../logHistory/controller');
+const { actionCheckClient } = require('../client/controller');
+const { actionCheckCommand } = require('../command/controller');
 const { Op } = require('sequelize'); //digunakan untuk operator kueri.
 const moment = require('moment'); // Pastikan menginstal moment untuk memudahkan manipulasi tanggal
+const axios = require('axios');
 
 module.exports = {
 	index: async (req, res) => {
 		try {
-			const conversation = await Conversation.findAll();
+			const conversation = await Conversation.findAll({
+				include: {
+					model: Client,
+					attributes: ['whatsapp_number'], // Hanya ambil atribut name_role dari tabel Role
+				}
+			});
 			res.status(200).json({ data: conversation });
 		} catch (err) {
 			res.status(500).json({ message: err.message || "internal server error" });
@@ -249,12 +258,51 @@ module.exports = {
 	        res.status(500).json({ message: err.message || "internal server error" });
 	    }
 	},
+	// actionCreated: async (req, res) => {
+	// 	try {
+	// 		const { client_id, question_client,  response_system, chunk_relevant, bill} = req.body;
+
+	// 		const newConversation = await Conversation.create({
+	// 			client_id, question_client, response_system, chunk_relevant, bill
+	// 		});
+	// 		res.status(200).json({ data: newConversation, status: "Conversation berhasil dibuat" });
+	// 	} catch (err) {
+	// 		res.status(500).json({ message: err.message || "internal server error" });
+	// 	}
+	// },
 	actionCreated: async (req, res) => {
 		try {
-			const { client_id, question_client,  response_system, chunk_relevant, bill} = req.body;
+			const { whatsapp_number, message_text } = req.body;
+
+			const client_id = await actionCheckClient(whatsapp_number);
+			
+			const response_command = await actionCheckCommand(message_text);
+
+			let question_client = message_text;
+			let response_system ;
+			let chunk_relevant ;
+			let bill ;
+
+			if (response_command != null) {
+				response_system = response_command;
+			} else {
+				await axios.post(process.env.BASE_URL_PYTHON + ':' + process.env.PORT_PYTHON + '/question_answer/', { question: message_text })
+                .then(function (response) {
+                    response_system = response.data.response;
+
+                    chunk_relevant = JSON.stringify(response.data.docs, null, 4);
+
+                    bill = response.data.bill
+
+                })
+                .catch(function (error) {
+                    console.log("error");
+                    console.log(error);
+                });
+			}
 
 			const newConversation = await Conversation.create({
-				client_id, question_client, response_system, chunk_relevant, bill
+				client_id: client_id, question_client: question_client, response_system: response_system, chunk_relevant: chunk_relevant, bill: bill
 			});
 			res.status(200).json({ data: newConversation, status: "Conversation berhasil dibuat" });
 		} catch (err) {

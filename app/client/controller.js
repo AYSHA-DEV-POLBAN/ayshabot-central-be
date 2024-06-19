@@ -251,6 +251,25 @@ module.exports = {
 			res.status(500).json({ message: err.message || "internal server error" });
 		}
 	},
+	actionCheckClient: async (whatsapp_number) => {
+		try {
+
+			const client = await Client.findOne({ where: { whatsapp_number: whatsapp_number } });
+
+			if (client) {
+				return client.id;
+				// res.status(200).json({ data: client, status: "Client sudah ada" });
+			}	
+			else {
+				const newClient = await Client.create({ whatsapp_number });
+				return newClient.id
+				// res.status(200).json({ data: newClient, status: "Client berhasil dibuat" });
+			}
+
+		} catch (err) {
+			res.status(500).json({ message: err.message || "internal server error" });
+		}
+	},
 	actionDelete: async (req, res) => {
 		try {
 			const { id } = req.params;

@@ -1,6 +1,8 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../../database/sequelize");
 
+const Client = require("../client/model");
+
 const Conversation = sequelize.define(
 	"Conversation",
 	{
@@ -13,6 +15,10 @@ const Conversation = sequelize.define(
 		client_id: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
+			references: {
+				model: Client,
+				key: 'id'
+			}
 		},
 		question_client: {
 			type: DataTypes.TEXT,
@@ -44,5 +50,8 @@ const Conversation = sequelize.define(
 		schema: "public",
 	}
 );
+
+// Definisikan asosiasi
+Conversation.belongsTo(Client, { foreignKey: 'client_id' });
 
 module.exports = Conversation;

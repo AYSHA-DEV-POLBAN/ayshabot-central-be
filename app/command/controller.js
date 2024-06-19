@@ -43,6 +43,26 @@ module.exports = {
 			res.status(500).json({ message: err.message || "internal server error" });
 		}
 	},
+	actionCheckCommand: async (name_command) => {
+		try {
+			const command = await Command.findOne({ where: { name_command : name_command, status_command : 1 } });
+
+			if (command) {
+				return command.response_command;
+				// logHistoryCreated(null, null, Command.getTableName().tableName, "GET DATA", JSON.stringify(command, null, 4) + " --> " + null, "Command.findOne({ where: { name_command : name_command, status_command : 1 } })");
+				// res.status(200).json({ data: command, status: "Command bisa dipakai" });
+			}
+			else {
+				return null;
+				// logHistoryCreated(null, null, Command.getTableName().tableName, "ERROR", "-", "Data Command tidak ada / Command sedang dalam status deactive");
+				// res.status(500).json({ message : "Data Command tidak ada / Command sedang dalam status deactive" });
+			}
+
+		} catch (err) {
+			logHistoryCreated(null, null, Command.getTableName().tableName, "ERROR", "-", err.message || "internal server error");
+			res.status(500).json({ message: err.message || "internal server error" });
+		}
+	},
 	actionCreated: async (req, res) => {
 		try {
 			const { name_command,  response_command} = req.body;

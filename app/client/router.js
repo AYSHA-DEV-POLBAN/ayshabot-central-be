@@ -11,6 +11,7 @@ const {
 	countMonthInYear,
 	countYear,
 	actionCreated,
+	// actionCheck,
 	actionDelete,
 	actionEdit } = require('./controller');
 const { isLoginAdmin, isLoginUser } = require('../middleware/auth');
@@ -25,6 +26,7 @@ router.get('/count-month', isLoginUser, countMonth);
 router.get('/count-month-in-year', isLoginUser, countMonthInYear);
 router.get('/count-year', isLoginUser, countYear);
 router.post('/create', actionCreated);
+// router.post('/check-client', actionCheck);
 router.delete('/delete/:id', isLoginUser, actionDelete);
 router.put('/edit/:id', isLoginUser, actionEdit);
 module.exports = router;
