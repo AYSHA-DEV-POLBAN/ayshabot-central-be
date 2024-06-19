@@ -1,4 +1,5 @@
 const Information = require("./model");
+const CategoryInformation = require("../categoryInformation/model");
 const path = require('path')
 const fs = require('fs')
 const config = require('../../config')
@@ -8,7 +9,12 @@ const multer  = require('multer');
 module.exports = {
 	index: async (req, res) => {
 		try {
-			const information = await Information.findAll();
+			const information = await Information.findAll({
+                include: {
+                    model: CategoryInformation,
+                    attributes: ['name_category_information', 'description_category_information'],
+                }
+            });
 			res.status(200).json({ data: information });
 		} catch (err) {
 			res.status(500).json({ message: err.message || "internal server error" });
@@ -17,7 +23,13 @@ module.exports = {
 	getInformationById: async (req, res) => {
 		try {
 			const { id } = req.params;
-			const information = await Information.findOne({ where: { id: id } });
+			const information = await Information.findOne({ 
+                where: { id: id },
+                include: {
+                    model: CategoryInformation,
+                    attributes: ['name_category_information', 'description_category_information'], 
+                }
+            });
 			logHistoryCreated(req.user.id, null, Information.getTableName().tableName, "GET DATA", JSON.stringify(information, null, 4) + " --> " + req.user.email, "Information.findOne({ where: { id: id } })");
 			res.status(200).json({ data: information });
 		} catch (err) {

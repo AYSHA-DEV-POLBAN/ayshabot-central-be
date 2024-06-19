@@ -1,6 +1,8 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../../database/sequelize");
 
+const Role = require("../role/model");
+
 const User = sequelize.define(
 	"User",
 	{
@@ -13,6 +15,10 @@ const User = sequelize.define(
 		role_id: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
+			references: {
+				model: Role,
+				key: 'id'
+			}
 		},
 		name: {
 			type: DataTypes.STRING,
@@ -67,5 +73,8 @@ const User = sequelize.define(
 		schema: "public",
 	}
 );
+
+// Definisikan asosiasi
+User.belongsTo(Role, { foreignKey: 'role_id' });
 
 module.exports = User;

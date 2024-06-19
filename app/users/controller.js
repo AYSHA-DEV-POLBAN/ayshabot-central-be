@@ -1,4 +1,5 @@
 const User = require("./model");
+const Role = require("../role/model");
 const { logHistoryCreated } = require('../logHistory/controller');
 const bcrypt = require("bcryptjs");
 const config = require('../../config');
@@ -9,7 +10,13 @@ module.exports = {
 		// logHistoryCreated(1, null, "user", "test", "test2", "test3");
 
 		try {
-			const user = await User.findAll();
+			// const user = await User.findAll();
+			const user = await User.findAll({
+				include: {
+					model: Role,
+					attributes: ['name_role'], // Hanya ambil atribut name_role dari tabel Role
+				}
+			});
 
 			// LOGGING
 			logHistoryCreated(req.user.id, null, User.getTableName().tableName, "GET DATA", JSON.stringify(user.map(user => user.dataValues), null, 4) + " --> " + req.user.email, "User.findAll()");
@@ -25,7 +32,13 @@ module.exports = {
 	getUserById: async (req, res) => {
 		try {
 			const { id } = req.params;
-			const user = await User.findOne({ where: { id: id } });
+			const user = await User.findOne({ 
+				where: { id: id }, 
+				include: {
+					model: Role,
+					attributes: ['name_role'], // Hanya ambil atribut name_role dari tabel Role
+				}
+			});
 			res.status(200).json({ data: user });
 		} catch (err) {
 			res.status(500).json({ message: err.message || "internal server error" });
@@ -34,7 +47,13 @@ module.exports = {
 	getUserByEmail: async (req, res) => {
 		try {
 			const { email } = req.body;
-			const user = await User.findOne({ where: { email: email } });
+			const user = await User.findOne({ 
+				where: { email: email },
+				include: {
+					model: Role,
+					attributes: ['name_role'], // Hanya ambil atribut name_role dari tabel Role
+				} 
+		});
 			res.status(200).json({ data: user });
 		} catch (err) {
 			res.status(500).json({ message: err.message || "internal server error" });

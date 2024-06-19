@@ -1,6 +1,8 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../../database/sequelize");
 
+const CategoryInformation = require("../categoryInformation/model");
+
 const Information = sequelize.define(
 	"Information",
 	{
@@ -13,6 +15,10 @@ const Information = sequelize.define(
 		category_information_id: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
+			references: {
+				model: CategoryInformation,
+				key: 'id'
+			}
 		},
 		title_information: {
 			type: DataTypes.STRING,
@@ -71,5 +77,8 @@ const Information = sequelize.define(
 		schema: "public",
 	}
 );
+
+// Definisikan asosiasi
+Information.belongsTo(CategoryInformation, { foreignKey: 'category_information_id' });
 
 module.exports = Information;
