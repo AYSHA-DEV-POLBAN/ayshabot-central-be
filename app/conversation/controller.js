@@ -24,7 +24,13 @@ module.exports = {
 	getConversationById: async (req, res) => {
 		try {
 			const { id } = req.params;
-			const conversation = await Conversation.findOne({ where: { id: id } });
+			const conversation = await Conversation.findOne({ 
+				where: { id: id },
+				include: {
+					model: Client,
+					attributes: ['whatsapp_number'], // Hanya ambil atribut name_role dari tabel Role
+				} 
+			});
 			logHistoryCreated(req.user.id, null, Conversation.getTableName().tableName, "GET DATA", JSON.stringify(conversation, null, 4) + " --> " + req.user.email, "Conversation.findOne({ where: { id: id } })");
 			res.status(200).json({ data: conversation });
 		} catch (err) {
