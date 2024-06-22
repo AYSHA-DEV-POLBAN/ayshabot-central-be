@@ -27,16 +27,17 @@ module.exports = {
 			// LOGGING
 			logHistoryCreated(null, null, User.getTableName().tableName, "SIGN UP - SUCCESS", JSON.stringify(req.body, null, 4), "Status : " + status_code + "Message : " + message);
 			
-			res.status(status_code).json({ status_code : status_code, message : message, data: newUser });
+			res.status(status_code).json({ status_code : status_code, status_message : message, data: newUser });
 
 		} catch (err) {
-			status_code = 200;
+			status_code = 500;
+			message = err.message || "internal server error" ;
 
 			// LOGGING
-			// logHistoryCreated(null, null, User.getTableName().tableName, "SIGN UP - ERROR", "-", "Status : " + status_code + "Message : " + err.message || "internal server error");
+			logHistoryCreated(null, null, User.getTableName().tableName, "SIGN UP - ERROR", "-", "Status : " + status_code + "Message : " + err.message || "internal server error");
 
-			console.log(err);
-			res.status(500).json({ message: err.message || "internal server error" });
+			// console.log(err);
+			res.status(status_code).json({ status_code : status_code, status_message : message });
 		}
 	},
 	signin: async (req, res) => {
@@ -63,48 +64,51 @@ module.exports = {
 							data.token = token;
 							data.role_id = user.role_id;
 
-							status = 200;
+							status_code = 200;
 							message = "Yeay! Sign In Successfully.";
 
 
 							// LOGGING
-							logHistoryCreated(null, null, User.getTableName().tableName, "SIGN IN - SUCCESS", JSON.stringify(token, null, 4), "Status : " + status + "Message : " + message);
+							logHistoryCreated(null, null, User.getTableName().tableName, "SIGN IN - SUCCESS", JSON.stringify(token, null, 4), "Status : " + status_code + "Message : " + message);
 
-							res.status(status).json({ data: data });
+							res.status(status_code).json({ status_code : status_code, status_message : message, data: data });
 						}
 						else {
-							status = 200;
-							message = "akun sedang non-akti";
+							status_code = 403;
+							message = "Upss! Akun sedang non-aktif";
 
 							// LOGGING
-							logHistoryCreated(null, null, User.getTableName().tableName, "SIGN IN - ERROR", "-", "akun sedang non-aktif");
+							logHistoryCreated(null, null, User.getTableName().tableName, "SIGN IN - ERROR", "-", "Status : " + status_code + "Message : " + message);
 
-							res.status(403).json({  message: "akun sedang non-aktif", });
+							res.status(status_code).json({  status_code : status_code, status_message : message });
 						}	
 					}
 					else {
+						status_code = 403;
+						message = "Upss! Email belum di aktivasi oleh administrator";
+
 						// LOGGING
-						logHistoryCreated(null, null, User.getTableName().tableName, "ERROR", "-", "email belum di aktivasi oleh administrator");
+						logHistoryCreated(null, null, User.getTableName().tableName, "ERROR", "-", "Status : " + status_code + "Message : " + message);
 						
-						res.status(403).json({
-							message: "email belum di aktivasi oleh administrator",
-						});
+						res.status(status_code).json({ status_code : status_code, status_message : message });
 					}
 				} else {
+					status_code = 403;
+					message = "Upss! Password yang di masukan salah / akun belum terdaftar";
+
 					// LOGGING
-					logHistoryCreated(null, null, User.getTableName().tableName, "ERROR", "-", "password yang di masukan salah / akun belum terdaftar");
+					logHistoryCreated(null, null, User.getTableName().tableName, "ERROR", "-", "Status : " + status_code + "Message : " + message);
 					
-					res.status(403).json({
-						message: "password yang di masukan salah / akun belum terdaftar",
-					});
+					res.status(status_code).json({ status_code : status_code, status_message : message });
 				}
 			} else {
-				// LOGGING
-				logHistoryCreated(null, null, User.getTableName().tableName, "ERROR", "-", "email yang anda masukan belum terdaftar");
+				status_code = 403;
+				message = "Upss! Email yang anda masukan belum terdaftar";
 				
-				res.status(403).json({
-					message: "email yang anda masukan belum terdaftar",
-				});
+				// LOGGING
+				logHistoryCreated(null, null, User.getTableName().tableName, "ERROR", "-", "Status : " + status_code + "Message : " + message);
+				
+				res.status(status_code).json({ status_code : status_code, status_message : message });
 			}
 		});
 	},
