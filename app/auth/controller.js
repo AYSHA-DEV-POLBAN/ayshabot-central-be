@@ -63,6 +63,7 @@ module.exports = {
 							data = {};
 							data.token = token;
 							data.role_id = user.role_id;
+							data.user_id = user.id;
 
 							status_code = 200;
 							message = "Yeay! Sign In Successfully.";
