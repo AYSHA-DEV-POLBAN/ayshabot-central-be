@@ -6,21 +6,27 @@ module.exports = {
 		try {
 			const category_information = await CategoryInformation.findAll();
 			logHistoryCreated(req.user.id, null, CategoryInformation.getTableName().tableName, "GET DATA", JSON.stringify(category_information.map(category_information => category_information.dataValues), null, 4) + " --> " + req.user.email, "CategoryInformation.findAll()");
-			res.status(200).json({ data: category_information });
+			res.status(200).json({ status_code : 200, status_message : "OK", data: category_information });
 		} catch (err) {
 			logHistoryCreated(req.user.id, null, CategoryInformation.getTableName().tableName, "ERROR", "-", err.message || "internal server error");
-			res.status(500).json({ message: err.message || "internal server error" });
+			res.status(500).json({ status_code : 500, status_message: err.message || "internal server error" });
 		}
 	},
 	getCategoryInformationById: async (req, res) => {
 		try {
 			const { id } = req.params;
 			const category_information = await CategoryInformation.findOne({ where: { id: id } });
-			logHistoryCreated(req.user.id, null, CategoryInformation.getTableName().tableName, "GET DATA", JSON.stringify(category_information, null, 4) + " --> " + req.user.email, "CategoryInformation.findOne({ where: { id: id } })");
-			res.status(200).json({ data: category_information });
+
+			if (category_information) {
+				logHistoryCreated(req.user.id, null, CategoryInformation.getTableName().tableName, "GET DATA BY ID", JSON.stringify(category_information, null, 4) + " --> " + req.user.email, "CategoryInformation.findOne({ where: { id: id } })");
+				res.status(200).json({ status_code : 200, status_message : "OK", data: category_information });
+			} else {
+				logHistoryCreated(req.user.id, null, CategoryInformation.getTableName().tableName, "GET DATA BY ID", JSON.stringify(category_information, null, 4) + " --> " + req.user.email, "CategoryInformation.findOne({ where: { id: id } })");
+				res.status(200).json({ status_code : 200, status_message : "Upss! Data tidak tersedia", data: category_information });
+			}
 		} catch (err) {
 			logHistoryCreated(req.user.id, null, CategoryInformation.getTableName().tableName, "ERROR", "-", err.message || "internal server error");
-			res.status(500).json({ message: err.message || "internal server error" });
+			res.status(500).json({ status_code : 500, status_message: err.message || "internal server error" });
 		}
 	},
 	actionCreated: async (req, res) => {
